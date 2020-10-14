@@ -1,10 +1,14 @@
 var context, video, width, height, canvas;
+var allTags = new Array(); 
 
 function Tag(w, h, color, x, y) {
   this.w = w;
   this.h = h;
   this.x = x;
   this.y = y; 
+  this.currentTime = canvas.previousElementSibling.currentTime;
+  // version final
+  // this.tagname = prompt("nom du tag :");
   context.fillStyle = color;
   context.fillRect(this.x, this.y, this.w, this.h);
 }
@@ -22,7 +26,6 @@ function timerCallback () {
 
 function videoToFrame() {
   video = document.getElementById("video");
-  // créer de manière dynamique afin de masquer la video
   canvas = document.getElementById("canvas");
   context = canvas.getContext("2d");
   let self = this;
@@ -34,6 +37,8 @@ function videoToFrame() {
 }
 
 function getFrames() {
+  // voir ct/ou stocker la valeur
+  // console.log("current time : ", video.currentTime)
   context.drawImage(this.video, 0, 0, this.width, this.height);
 }
 
@@ -42,6 +47,6 @@ videoToFrame()
 if (canvas !== null) {
   canvas.addEventListener('click', function(e) {
     video.pause();
-    var tagtest = new Tag(3, 3, "red", e.layerX, e.layerY);
+    allTags.push(new Tag(3, 3, "red", e.layerX, e.layerY));
   })
 } 
