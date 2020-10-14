@@ -37,8 +37,6 @@ function videoToFrame() {
 }
 
 function getFrames() {
-  // voir ct/ou stocker la valeur
-  // console.log("current time : ", video.currentTime)
   context.drawImage(this.video, 0, 0, this.width, this.height);
 }
 
