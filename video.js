@@ -45,6 +45,7 @@ videoToFrame()
 if (canvas !== null) {
   canvas.addEventListener('click', function(e) {
     video.pause();
+    // voir ct distinguer les tags existants + drag et drop
     allTags.push(new Tag(3, 3, "red", e.layerX, e.layerY));
   })
 } 
