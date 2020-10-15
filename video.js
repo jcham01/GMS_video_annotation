@@ -14,7 +14,7 @@ function Tag(w, h, color, x, y) {
 }
 
 function timerCallback () {
-  if (this.video.paused || this.video.ended) {
+  if (this.video.ended) {
     return;
   }
   this.getFrames();
@@ -38,6 +38,13 @@ function videoToFrame() {
 
 function getFrames() {
   context.drawImage(this.video, 0, 0, this.width, this.height);
+  // pour garder les tags existant et les tracer 
+  if (allTags.length>0) {
+    allTags.map(function(tag){
+      context.fillStyle = "red";
+      context.fillRect(tag.x, tag.y, tag.w, tag.h);
+    });
+  }
 }
 
 videoToFrame()
