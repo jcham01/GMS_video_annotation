@@ -40,10 +40,13 @@ function getFrames() {
   context.drawImage(this.video, 0, 0, this.width, this.height);
   // pour garder les tags existant et les tracer 
   if (allTags.length>0) {
-    allTags.map(function(tag){
-      context.fillStyle = "red";
-      context.fillRect(tag.x, tag.y, tag.w, tag.h);
-    });
+    existAtime = allTags.filter(tag => video.currentTime >= tag.currentTime);
+    if (existAtime.length>0) {
+      allTags.map(function(tag){
+        context.fillStyle = "red";
+        context.fillRect(tag.x, tag.y, tag.w, tag.h);
+      });  
+    }
   }
 }
 
@@ -53,6 +56,6 @@ if (canvas !== null) {
   canvas.addEventListener('click', function(e) {
     video.pause();
     // voir ct distinguer les tags existants + drag et drop
-    allTags.push(new Tag(3, 3, "red", e.layerX, e.layerY));
+    allTags.push(new Tag(30, 30, "red", e.layerX, e.layerY));
   })
 } 
