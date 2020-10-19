@@ -40,7 +40,7 @@ function getFrames() {
   context.drawImage(this.video, 0, 0, this.width, this.height);
   // pour garder les tags existant et les tracer 
   if (allTags.length>0) {
-    existAtime = allTags.filter(tag => video.currentTime >= tag.currentTime);
+    var existAtime = allTags.filter(tag => video.currentTime >= tag.currentTime);
     if (existAtime.length>0) {
       allTags.map(function(tag){
         context.fillStyle = "red";
@@ -50,12 +50,25 @@ function getFrames() {
   }
 }
 
+function createIfNoExist(mx, my) {
+  // creer si retourne 0
+  var tagexist = allTags.filter(tag => ((mx>=tag.x&&mx<=tag.x+30)&&(my>=tag.y&&my<=tag.y+30)));
+  if (tagexist.length<=0) {
+    allTags.push(new Tag(30, 30, "red", mx, my));      
+  }
+  return tagexist;
+}
+
 videoToFrame()
 
 if (canvas !== null) {
   canvas.addEventListener('click', function(e) {
-    video.pause();
+    video.pause(e.layerX, e.layerY);
     // voir ct distinguer les tags existants + drag et drop
-    allTags.push(new Tag(30, 30, "red", e.layerX, e.layerY));
+    if (allTags.length>0) {
+      createIfNoExist(e.layerX, e.layerY);
+    } else {
+      allTags.push(new Tag(30, 30, "red", e.layerX, e.layerY));      
+    }
   })
 } 
