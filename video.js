@@ -1,5 +1,7 @@
 var context, video, width, height, canvas;
 var allTags = new Array(); 
+var tagexist;
+var press = true;
 
 function Tag(w, h, color, x, y) {
   this.w = w;
@@ -8,7 +10,7 @@ function Tag(w, h, color, x, y) {
   this.y = y; 
   this.currentTime = canvas.previousElementSibling.currentTime;
   // version final
-  // this.tagname = prompt("nom du tag :");
+  this.tagname = prompt("nom du tag :");
   context.fillStyle = color;
   context.fillRect(this.x, this.y, this.w, this.h);
 }
@@ -51,8 +53,29 @@ function getFrames() {
 }
 
 function createIfNotExist(mx, my) {
-  // creer si retourne 0
-  var tagexist = allTags.filter(tag => ((mx>=tag.x&&mx<=tag.x+30)&&(my>=tag.y&&my<=tag.y+30)));
+  // changer les valeurs en dur : 30
+  /* allTags.map(function(tag) {  
+    canvas.addEventListener('mousemove', function(e) {
+        if ((e.layerX>=tag.x&&e.layerX<=tag.x+30)&&(e.layerY>=tag.y&&e.layerY<=tag.y+30)) {
+          console.log("mouse move x : ", e.layerX, " y : ", e.layerY);
+          context.fillRect(e.layerX, e.layerY, 30, 30);
+        }
+    })
+  }) */
+  tagexist = allTags.filter(tag => ((mx>=tag.x&&mx<=tag.x+30)&&(my>=tag.y&&my<=tag.y+30)));
+  if (tagexist.length>0) {
+    canvas.addEventListener('mousemove', function(e) {
+      if (press === true) {
+        tagexist[0].x = e.layerX;
+        tagexist[0].y = e.layerY;
+        console.log("mouse move tagexist[0].x ", tagexist[0].x, " tagexist[0].y ", tagexist[0].y);  
+      }
+    })
+    canvas.addEventListener('mousedown', function(e) {
+      press = false;
+      console.log('mousedown');
+    })
+  }
   if (tagexist.length<=0) {
     allTags.push(new Tag(30, 30, "red", mx, my));      
   }
@@ -64,8 +87,9 @@ videoToFrame()
 if (canvas !== null) {
   canvas.addEventListener('click', function(e) {
     video.pause(e.layerX, e.layerY);
-    // voir ct distinguer les tags existants + drag et drop
+    //drag et drop
     if (allTags.length>0) {
+      press = true
       createIfNotExist(e.layerX, e.layerY);
     } else {
       allTags.push(new Tag(30, 30, "red", e.layerX, e.layerY));      
