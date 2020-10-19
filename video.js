@@ -50,7 +50,7 @@ function getFrames() {
   }
 }
 
-function createIfNoExist(mx, my) {
+function createIfNotExist(mx, my) {
   // creer si retourne 0
   var tagexist = allTags.filter(tag => ((mx>=tag.x&&mx<=tag.x+30)&&(my>=tag.y&&my<=tag.y+30)));
   if (tagexist.length<=0) {
@@ -66,7 +66,7 @@ if (canvas !== null) {
     video.pause(e.layerX, e.layerY);
     // voir ct distinguer les tags existants + drag et drop
     if (allTags.length>0) {
-      createIfNoExist(e.layerX, e.layerY);
+      createIfNotExist(e.layerX, e.layerY);
     } else {
       allTags.push(new Tag(30, 30, "red", e.layerX, e.layerY));      
     }
