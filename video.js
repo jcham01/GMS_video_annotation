@@ -50,6 +50,7 @@ function getFrames() {
   }
 }
 
+// TODO - A découper
 function createIfNotExist(mx, my) {
   tagexist = allTags.filter(tag => ((mx>=tag.x&&mx<=tag.x+30)&&(my>=tag.y&&my<=tag.y+30)));
   if (tagexist.length>0) {
@@ -75,6 +76,14 @@ function createIfNotExist(mx, my) {
   return tagexist;
 }
 
+function deleteTag(mx, my) {
+  var tagToDelete = allTags.filter(tag => ((mx>=tag.x&&mx<=tag.x+30)&&(my>=tag.y&&my<=tag.y+30)));
+  var index = allTags.indexOf(tagToDelete[0]);
+  if (index > -1) {
+    allTags.splice(index, 1);
+  }
+}
+
 videoToFrame()
 
 if (canvas !== null) {
@@ -84,6 +93,13 @@ if (canvas !== null) {
       createIfNotExist(e.layerX, e.layerY);
     } else {
       allTags.push(new Tag(30, 30, "red", e.layerX, e.layerY));      
+    }
+  })
+  canvas.addEventListener('contextmenu', function(e) {
+    // TODO - alert avec possibilité d'annuler 
+    e.preventDefault();
+    if (allTags.length>0) {
+      deleteTag(e.layerX, e.layerY);
     }
   })
 } 
