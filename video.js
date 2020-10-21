@@ -3,6 +3,16 @@ var allTags = new Array();
 var tagexist;
 var press = true;
 
+// travailler avec des blobs
+const video_data = { "test": "donnees test" };
+const file = new Blob(
+  [JSON.stringify(video_data)], 
+  { type: 'application/json' }
+);
+// url qui sera a telecharger
+const fileURL = URL.createObjectURL(file);
+var linkElement;
+
 function Tag(w, h, color, x, y) {
   this.w = w;
   this.h = h;
@@ -25,10 +35,18 @@ function timerCallback () {
     }, 0);
 }
 
+// TODO - creation/upload "propres" de fichiers
+
 function videoToFrame() {
   video = document.getElementById("video");
   canvas = document.getElementById("canvas");
   context = canvas.getContext("2d");
+  linkElement = document.createElement("a");
+  console.log(linkElement);
+  linkElement.setAttribute('href', fileURL);
+  linkElement.setAttribute('download', 'polypane-workspace.json');
+  linkElement.innerText = "test";
+  document.body.appendChild(linkElement);
   let self = this;
   this.video.addEventListener('play', function() {
     width = video.videoWidth;
