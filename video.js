@@ -1,6 +1,7 @@
 var context, video, width, height, canvas;
 var allTags = new Array(); 
 var tagexist;
+var existAtime;
 var press = true;
 
 // travailler avec des blobs
@@ -62,9 +63,9 @@ function videoToFrame() {
 function getFrames() {
   context.drawImage(this.video, 0, 0, this.width, this.height);
   if (allTags.length>0) {
-    var existAtime = allTags.filter(tag => video.currentTime >= tag.currentTime);
+    existAtime = allTags.filter(tag => video.currentTime >= tag.currentTime);
     if (existAtime.length>0) {
-      allTags.map(function(tag){
+      existAtime.map(function(tag){
         context.fillStyle = "red";
         context.fillRect(tag.x, tag.y, tag.w, tag.h);
       });  
@@ -80,6 +81,7 @@ function createIfNotExist(mx, my) {
       if (press === true) {
         tagexist[0].x = e.layerX;
         tagexist[0].y = e.layerY;
+        tagexist[0].currentTime = video.currentTime;
       }
     })
     canvas.addEventListener('mousedown', function(e) {
