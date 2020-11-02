@@ -30,11 +30,6 @@ function Tag(w, h, color, x, y) {
   })
 }
 
-// TODO le tab dans un json, puis lien de telechargement
-function saveAlltags(allTags) {
-
-}
-
 function timerCallback () {
   if (this.video.ended) {
     return;
@@ -69,7 +64,9 @@ function getFrames() {
   context.drawImage(this.video, 0, 0, this.width, this.height);
   if (video_data.length>0) {
     video_data = uniqBy(video_data, JSON.stringify)
-    existAtime = video_data.filter(tag => video.currentTime === tag.currentime);
+    // regarder filter nom et plus récent
+    existAtime = video_data.filter(tag => video.currentTime.toFixed(0) === tag.currentime.toFixed(0));
+    // existAtime = video_data.filter(tag => video.currentTime >= tag.currentime);
     if (existAtime.length>0) {
       existAtime.map(function(tag){
         context.fillStyle = "red";
@@ -97,12 +94,28 @@ function createIfNotExist(mx, my) {
     canvas.addEventListener('mouseup', function(e) {
       press = false;
       console.log('mouseup');
+      // test length > 0
+      var sameName = allTags.filter(tag => tagexist[0].tagname === tag.tagname)
+      if (sameName.length>0) { 
+        video_data.push({ 
+          "tagname": sameName[0].tagname, 
+          "currentime": sameName[0].currentTime,
+          "x": sameName[0].x,
+          "y": sameName[0].y
+        })
+        sameName[0].tagname = tagexist[0].tagname;
+        sameName[0].currentTime = tagexist[0].currentime;
+        sameName[0].x = tagexist[0].x;
+        sameName[0].y = tagexist[0].y;
+      }
       video_data.push({ 
+        "tagname": tagexist[0].tagname, 
       "tagname": tagexist[0].tagname, 
-      "currentime": tagexist[0].currentime,
-      "x": tagexist[0].x,
-      "y": tagexist[0].y
-  })
+        "tagname": tagexist[0].tagname, 
+        "currentime": tagexist[0].currentime,
+        "x": tagexist[0].x,
+        "y": tagexist[0].y
+      })
     })
   console.log(tagexist[0].tagname);
   }
@@ -142,7 +155,7 @@ if (canvas !== null) {
   canvas.addEventListener('contextmenu', function(e) {
     // TODO - alert avec possibilité d'annuler 
     e.preventDefault();
-    if (allTags.length>0) {
+    if (video_data.length>0) {
       deleteTag(e.layerX, e.layerY);
     }
   })
