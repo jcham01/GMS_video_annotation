@@ -3,9 +3,8 @@ var allTags = new Array();
 var tagexist;
 var existAtime;
 var press = true;
-
 // travailler avec des blobs
-const video_data = { "test": "donnees test" };
+var video_data = new Array();
 const file = new Blob(
   [JSON.stringify(video_data)], 
   { type: 'application/json' }
@@ -23,6 +22,12 @@ function Tag(w, h, color, x, y) {
   this.tagname = prompt("nom du tag :");
   context.fillStyle = color;
   context.fillRect(this.x, this.y, this.w, this.h);
+  video_data.push({ 
+    "tagname": this.tagname, 
+    "currentime": this.currentTime,
+    "x": x,
+    "y": y
+  })
 }
 
 // TODO le tab dans un json, puis lien de telechargement
@@ -62,12 +67,13 @@ function videoToFrame() {
 
 function getFrames() {
   context.drawImage(this.video, 0, 0, this.width, this.height);
-  if (allTags.length>0) {
-    existAtime = allTags.filter(tag => video.currentTime >= tag.currentTime);
+  if (video_data.length>0) {
+    video_data = uniqBy(video_data, JSON.stringify)
+    existAtime = video_data.filter(tag => video.currentTime === tag.currentime);
     if (existAtime.length>0) {
       existAtime.map(function(tag){
         context.fillStyle = "red";
-        context.fillRect(tag.x, tag.y, tag.w, tag.h);
+        context.fillRect(tag.x, tag.y, 30, 30);
       });  
     }
   }
@@ -75,13 +81,13 @@ function getFrames() {
 
 // TODO - A découper
 function createIfNotExist(mx, my) {
-  tagexist = allTags.filter(tag => ((mx>=tag.x&&mx<=tag.x+30)&&(my>=tag.y&&my<=tag.y+30)));
+  tagexist = video_data.filter(tag => ((mx>=tag.x&&mx<=tag.x+30)&&(my>=tag.y&&my<=tag.y+30)));
   if (tagexist.length>0) {
     canvas.addEventListener('mousemove', function(e) {
       if (press === true) {
         tagexist[0].x = e.layerX;
         tagexist[0].y = e.layerY;
-        tagexist[0].currentTime = video.currentTime;
+        tagexist[0].currentime = video.currentTime;
       }
     })
     canvas.addEventListener('mousedown', function(e) {
@@ -91,6 +97,12 @@ function createIfNotExist(mx, my) {
     canvas.addEventListener('mouseup', function(e) {
       press = false;
       console.log('mouseup');
+      video_data.push({ 
+      "tagname": tagexist[0].tagname, 
+      "currentime": tagexist[0].currentime,
+      "x": tagexist[0].x,
+      "y": tagexist[0].y
+  })
     })
   console.log(tagexist[0].tagname);
   }
@@ -106,6 +118,14 @@ function deleteTag(mx, my) {
   if (index > -1) {
     allTags.splice(index, 1);
   }
+}
+
+function uniqBy(a, key) {
+    var seen = {};
+    return a.filter(function(item) {
+        var k = key(item);
+        return seen.hasOwnProperty(k) ? false : (seen[k] = true);
+    })
 }
 
 videoToFrame()
