@@ -101,11 +101,8 @@ function createIfNotExist(mx, my) {
 }
 
 function deleteTag(mx, my) {
-  var tagToDelete = allTags.filter(tag => ((mx>=tag.x&&mx<=tag.x+30)&&(my>=tag.y&&my<=tag.y+30)));
-  var index = allTags.indexOf(tagToDelete[0]);
-  if (index > -1) {
-    allTags.splice(index, 1);
-  }
+  var tagToDelete = allTags.filter(tag => !((mx>=tag.x&&mx<=tag.x+30)&&(my>=tag.y&&my<=tag.y+30)));
+  allTags = tagToDelete
 }
 
 videoToFrame()
