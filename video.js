@@ -1,6 +1,8 @@
 var context, video, width, height, canvas;
 var allTags = new Array(); 
 var tagexist;
+var tagByName;
+var tagByTime;
 var press = true;
 const video_data = { "test": "donnees test" };
 const file = new Blob(
@@ -65,11 +67,12 @@ function getFrames() {
 function createIfNotExist(mx, my) {
   tagexist = allTags.filter(tag => ((mx>=tag.x&&mx<=tag.x+30)&&(my>=tag.y&&my<=tag.y+30)));
   if (tagexist.length>0) {
+    tagByName = allTags.filter(tag => tagexist[0].tagname === tag.tagname)
+    tagByTime = tagByName.filter(tag => video.currentTime.toFixed(0) === tag.currentTime.toFixed(0));
     canvas.addEventListener('mousemove', function(e) {
       if (press === true) {
-        tagexist[0].x = e.layerX;
-        tagexist[0].y = e.layerY;
-        tagexist[0].currentTime = video.currentTime;
+        tagByTime[0].x = e.layerX;
+        tagByTime[0].y = e.layerY;
       }
     })
     canvas.addEventListener('mousedown', function(e) {
@@ -78,6 +81,10 @@ function createIfNotExist(mx, my) {
     })
     canvas.addEventListener('mouseup', function(e) {
       press = false;
+      for (var t = tagByName.indexOf(tagByTime[0]); t < tagByName.length; t++) {
+        tagByName[t].x = tagByTime[0].x 
+        tagByName[t].y = tagByTime[0].y
+      }
       console.log('mouseup');
     })
   console.log(tagexist[0].tagname);
