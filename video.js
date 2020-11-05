@@ -77,17 +77,27 @@ function createIfNotExist(mx, my) {
     })
     canvas.addEventListener('mousedown', function(e) {
       press = true;
-      console.log('mousedown');
     })
     canvas.addEventListener('mouseup', function(e) {
       press = false;
+      var diffX = tagByTime[0].x - tagByName[tagByName.indexOf(tagByTime[0])-1].x
+      var diffY = tagByTime[0].y - tagByName[tagByName.indexOf(tagByTime[0])-1].y
+      var duree = tagByName.indexOf(tagByTime[0])
+      var diffXduree = diffX/duree
+      var diffYduree = diffY/duree
+      var d = 0
+      // une première boucle pour le mouvement avec le premier index voir decouper en step
+      // voir si decouper dans une fonction
+      for (var a = tagByName.indexOf(tagByName[0]); a < tagByName.indexOf(tagByTime[0]); a++) {
+        d++
+        tagByName[a].x = tagByName[a].x + diffXduree*d
+        tagByName[a].y = tagByName[a].y + diffYduree*d
+      }
       for (var t = tagByName.indexOf(tagByTime[0]); t < tagByName.length; t++) {
         tagByName[t].x = tagByTime[0].x 
         tagByName[t].y = tagByTime[0].y
       }
-      console.log('mouseup');
     })
-  console.log(tagexist[0].tagname);
   }
   if (tagexist.length<=0) {
     var name = prompt("nom du tag :")
@@ -124,7 +134,7 @@ if (canvas !== null) {
   canvas.addEventListener('contextmenu', function(e) {
     e.preventDefault();
     if (allTags.length>0) {
-      deleteTag(e.layerX, e.layerY);
+      // deleteTag(e.layerX, e.layerY);
     }
   })
 } 
