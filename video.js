@@ -4,13 +4,7 @@ var tagexist;
 var tagByName;
 var tagByTime;
 var press = true;
-const video_data = { "test": "donnees test" };
-const file = new Blob(
-  [JSON.stringify(video_data)], 
-  { type: 'application/json' }
-);
-const fileURL = URL.createObjectURL(file);
-var linkElement;
+var video_data = new Array();
 
 function Tag(tagname, w, h, color, x, y, currentTime) {
   this.w = w;
@@ -38,11 +32,6 @@ function videoToFrame() {
   video = document.getElementById("video");
   canvas = document.getElementById("canvas");
   context = canvas.getContext("2d");
-  linkElement = document.createElement("a");
-  linkElement.setAttribute('href', fileURL);
-  linkElement.setAttribute('download', 'polypane-workspace.json');
-  linkElement.innerText = "test";
-  document.body.appendChild(linkElement);
   let self = this;
   this.video.addEventListener('play', function() {
     width = video.videoWidth;
@@ -106,7 +95,28 @@ function createIfNotExist(mx, my) {
         allTags.push(new Tag(name, 30, 30, "red", mx, my, i));              
       }
     }
+  } 
+  if (allTags.length > 0) {
+    allTags.map(function(tag) {
+      video_data.push({
+        "tagname" : tag.tagname,
+        "currentTime" : tag.currentTime,
+        "x" : tag.x, 
+        "y" : tag.y
+      })
+    })
   }
+  const file = new Blob(
+    [JSON.stringify(video_data)], 
+    { type: 'application/json' }
+  );
+  const fileURL = URL.createObjectURL(file);
+  var linkElement;
+  linkElement = document.createElement("a");
+  linkElement.setAttribute('href', fileURL);
+  linkElement.setAttribute('download', 'annotations.json');
+  linkElement.innerText = "télécharger";
+  document.body.appendChild(linkElement);
   return tagexist;
 }
 
@@ -134,7 +144,7 @@ if (canvas !== null) {
   canvas.addEventListener('contextmenu', function(e) {
     e.preventDefault();
     if (allTags.length>0) {
-      // deleteTag(e.layerX, e.layerY);
+      deleteTag(e.layerX, e.layerY);
     }
   })
 } 
