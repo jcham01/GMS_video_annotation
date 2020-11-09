@@ -29,7 +29,9 @@ function timerCallback () {
 }
 
 function videoToFrame() {
+  var source = prompt("vidéo à annoter : ")
   video = document.getElementById("video");
+  video.src = "media/"+source+".mp4"
   canvas = document.getElementById("canvas");
   context = canvas.getContext("2d");
   let self = this;
@@ -97,6 +99,7 @@ function createIfNotExist(mx, my) {
     }
   } 
   if (allTags.length > 0) {
+    // TODO - voir si gestion sur crochets et afficher telecharger une fois 
     allTags.map(function(tag) {
       video_data.push({
         "tagname" : tag.tagname,
