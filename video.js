@@ -37,7 +37,9 @@ function videoToFrame() {
   let self = this;
   this.video.addEventListener('play', function() {
     width = video.videoWidth;
-    height = video.videoHeight; 
+    height = video.videoHeight;
+    canvas.width = width;
+    canvas.height = height;
     self.timerCallback()
   }, false);
 }
@@ -56,7 +58,7 @@ function getFrames() {
 }
 
 function createIfNotExist(mx, my) {
-  tagexist = allTags.filter(tag => ((mx>=tag.x&&mx<=tag.x+30)&&(my>=tag.y&&my<=tag.y+30)));
+  tagexist = allTags.filter(tag => ((mx>=tag.x&&mx<=tag.x+5)&&(my>=tag.y&&my<=tag.y+5)));
   if (tagexist.length>0) {
     tagByName = allTags.filter(tag => tagexist[0].tagname === tag.tagname)
     tagByTime = tagByName.filter(tag => video.currentTime.toFixed(0) === tag.currentTime.toFixed(0));
@@ -77,8 +79,6 @@ function createIfNotExist(mx, my) {
       var diffXduree = diffX/duree
       var diffYduree = diffY/duree
       var d = 0
-      // une première boucle pour le mouvement avec le premier index voir decouper en step
-      // voir si decouper dans une fonction
       for (var a = tagByName.indexOf(tagByName[0]); a < tagByName.indexOf(tagByTime[0]); a++) {
         d++
         tagByName[a].x = tagByName[a].x + diffXduree*d
@@ -94,12 +94,12 @@ function createIfNotExist(mx, my) {
     var name = prompt("nom du tag :")
     if (name !== "") {
       for (var i = parseInt(video.currentTime.toFixed(0)); i < parseInt(video.duration.toFixed(0)); i++) {
-        allTags.push(new Tag(name, 30, 30, "red", mx, my, i));              
+        allTags.push(new Tag(name, 5, 5, "red", mx, my, i));              
       }
     }
   } 
   if (allTags.length > 0) {
-    // TODO - voir si gestion sur crochets et afficher telecharger une fois 
+    video_data = []
     allTags.map(function(tag) {
       video_data.push({
         "tagname" : tag.tagname,
@@ -114,17 +114,14 @@ function createIfNotExist(mx, my) {
     { type: 'application/json' }
   );
   const fileURL = URL.createObjectURL(file);
-  var linkElement;
-  linkElement = document.createElement("a");
+  var linkElement = document.getElementById("annotations")
   linkElement.setAttribute('href', fileURL);
   linkElement.setAttribute('download', 'annotations.json');
-  linkElement.innerText = "télécharger";
-  document.body.appendChild(linkElement);
   return tagexist;
 }
 
 function deleteTag(mx, my) {
-  var tagToDelete = allTags.filter(tag => !((mx>=tag.x&&mx<=tag.x+30)&&(my>=tag.y&&my<=tag.y+30)));
+  var tagToDelete = allTags.filter(tag => !((mx>=tag.x&&mx<=tag.x+5)&&(my>=tag.y&&my<=tag.y+5)));
   allTags = tagToDelete
 }
 
@@ -139,7 +136,7 @@ if (canvas !== null) {
       var name = prompt("nom du tag :")
       if (name !== "") {
         for (var i = parseInt(video.currentTime.toFixed(0)); i < parseInt(video.duration.toFixed(0)); i++) {
-          allTags.push(new Tag(name, 30, 30, "red", e.layerX, e.layerY, i));              
+          allTags.push(new Tag(name, 5, 5, "red", e.layerX, e.layerY, i));              
         }
       }
     }
