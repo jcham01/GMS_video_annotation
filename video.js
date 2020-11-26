@@ -79,11 +79,13 @@ function createIfNotExist(mx, my) {
       var diffXduree = diffX/duree
       var diffYduree = diffY/duree
       var d = 0
+      // gestion du mouvement - tous les tagByName jusqu'au currentTime => pour le mouvement
       for (var a = tagByName.indexOf(tagByName[0]); a < tagByName.indexOf(tagByTime[0]); a++) {
         d++
         tagByName[a].x = tagByName[a].x + diffXduree*d
         tagByName[a].y = tagByName[a].y + diffYduree*d
       }
+      // gestion du tagByName à partir du current => pour mettre à jour la position
       for (var t = tagByName.indexOf(tagByTime[0]); t < tagByName.length; t++) {
         tagByName[t].x = tagByTime[0].x 
         tagByName[t].y = tagByTime[0].y
