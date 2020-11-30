@@ -47,7 +47,7 @@ function videoToFrame() {
 function getFrames() {
   context.drawImage(this.video, 0, 0, this.width, this.height);
   if (allTags.length>0) {
-    var existAtime = allTags.filter(tag => video.currentTime.toFixed(0) === tag.currentTime.toFixed(0));
+    var existAtime = allTags.filter(tag => video.currentTime.toFixed(1) === tag.currentTime.toFixed(1));
     if (existAtime.length>0) {
       existAtime.map(function(tag){
         context.fillStyle = "red";
@@ -79,7 +79,7 @@ function createIfNotExist(mx, my) {
       var diffXduree = diffX/duree
       var diffYduree = diffY/duree
       var d = 0
-      // gestion du mouvement - tous les tagByName jusqu'au currentTime => pour le mouvement
+      // gestion de tous les tagByName jusqu'au currentTime => pour le mouvement
       for (var a = tagByName.indexOf(tagByName[0]); a < tagByName.indexOf(tagByTime[0]); a++) {
         d++
         tagByName[a].x = tagByName[a].x + diffXduree*d
@@ -95,7 +95,7 @@ function createIfNotExist(mx, my) {
   if (tagexist.length<=0) {
     var name = prompt("nom du tag :")
     if (name !== "") {
-      for (var i = parseInt(video.currentTime.toFixed(0)); i < parseInt(video.duration.toFixed(0)); i++) {
+      for (var i = video.currentTime; i < video.duration; i+=0.016) {
         allTags.push(new Tag(name, 5, 5, "red", mx, my, i));              
       }
     }
@@ -137,7 +137,7 @@ if (canvas !== null) {
     } else {
       var name = prompt("nom du tag :")
       if (name !== "") {
-        for (var i = parseInt(video.currentTime.toFixed(0)); i < parseInt(video.duration.toFixed(0)); i++) {
+        for (var i = video.currentTime; i < video.duration; i+=0.016) {
           allTags.push(new Tag(name, 5, 5, "red", e.layerX, e.layerY, i));              
         }
       }
