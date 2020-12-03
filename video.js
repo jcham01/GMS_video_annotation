@@ -5,6 +5,32 @@ var tagByName;
 var tagByTime;
 var press = true;
 var video_data = new Array();
+var inputElement;
+var fileList;
+
+inputElement = document.getElementById("input");
+
+inputElement.addEventListener('change', () => {
+    fileList = inputElement.files;
+    console.log("fileList length", fileList.length)
+    for (let i = 0, numFiles = fileList.length; i < numFiles; i++) {
+        var file = fileList[i];
+        var objectURL = window.URL.createObjectURL(file);
+
+        var li = document.createElement("li")
+        var linkElement = document.createElement("a")
+        linkElement.setAttribute('href', objectURL);
+        var video_link = document.createTextNode(file.name);
+        linkElement.appendChild(video_link)
+        li.appendChild(linkElement)
+        document.getElementById("liste").appendChild(li)
+
+        linkElement.addEventListener("click", function(e){
+            video.src = e.target.href
+            e.preventDefault();
+        }, false);
+    }
+});
 
 function Tag(tagname, w, h, color, x, y, currentTime) {
   this.w = w;
@@ -29,9 +55,9 @@ function timerCallback () {
 }
 
 function videoToFrame() {
-  var source = prompt("vidéo à annoter : ")
+  // var source = prompt("vidéo à annoter : ")
   video = document.getElementById("video");
-  video.src = "media/"+source+".mp4"
+  // video.src = "media/"+source+".mp4"
   canvas = document.getElementById("canvas");
   context = canvas.getContext("2d");
   let self = this;

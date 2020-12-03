@@ -6,8 +6,14 @@
     <title>GMS Video Annnotation</title>
 </head>
 <body>
-    <video id="video" autoplay playsinline muted controls />
-    </video>
+    <div>
+        <input type="file" id="input" multiple>
+        <ul id="liste"></ul>
+    </div>
+    <div>
+        <video id="video" autoplay playsinline muted controls />
+        </video>
+    </div>
     <canvas id="canvas" style="border: 1px solid black;"></canvas>
     <div>
         <a id="annotations">télécharger</a>
